@@ -1,0 +1,173 @@
+
+<html>
+<head>
+<style>
+<!--
+body{
+font-family: 'Trebuchet MS', Verdana;
+}
+p{
+font-family: 'Trebuchet MS', Times;
+margin: 10px 10px 15px 20px;
+}
+h3{
+margin: 5px;
+}
+h2{
+margin: 10px;
+}
+h1{
+margin: 10px 0px 0px 20px;
+}
+div.main-body{
+align:center;
+margin: 30px;
+}
+hr{
+margin:20px 0px 20px 0px;
+}
+-->
+</style>
+</head>
+
+<body>
+<center>
+<a href="http://www.bu.edu"><img border="0" src="http://www.cs.bu.edu/fac/betke/images/bu-logo.gif"
+width="119" height="120"></a>
+</center>
+
+<h1>Hidden Markov Models</h1>
+<p> 
+ CS 440 P3 <br>
+ Kebi Hong <br>
+ Aldwin Huynh, Ziyan Huo, Amanda Doss   <br>
+ April 5th 2016
+</p>
+
+<div class="main-body">
+<hr>
+<h2> Problem Definition </h2>
+<p>
+This program implements hidden markov models to build a basic English sentence recognizer. Different parts of grammar
+(ie. subject, predicate, object, and auxiliary) are identified by the program as well as the probabilities of possible sentences
+created from a given library of words.  A sentence recognizer could be useful tool for users learning different languages.   
+If a user wants to learn English, identifying parts of speech could help facilitate learning by classifying incorrect English sentences or
+ rearranging the order of words depending on the type.  We assume the user is only typing English words and is using correct spelling. 
+The difficulties are if the user wants to build sentences that require more complicated grammar.  This program can process simple English sentences.  
+</p>
+
+<hr>
+<h2> Method and Implementation </h2>
+<p>
+Our Hidden Markov Model can perform various tasks based on the input sentences such as pattern recognition, optimization, and state-path determination. 
+We used the "forward part" of the forward/backward algorithm to implement pattern recognition. In the function, recognize, using the Hidden Markov model
+and observations, the observation probability of each output sequence is calculated.  In this program, we also used the Viterbi algorithm which is used to find the most
+likely sequence of hidden states resulting in the sequence of observations. The Viterbi algorithm was coded in the state_path function where the optimal state path and probability
+of each observation set are calculated. In the function optimization, the Baum-Welch algorithm is used to optimize the state transition, emission and starting state probabilities of the Hidden Markov Model.  
+For comparison, the recognize probabilities before and after optimization are calculated as well. 
+</p>
+
+<hr>
+<h2>Experiments</h2>
+<p>
+  
+We performed several experiments on each of the function implemented. 
+For each section we tested 5 different input sentences - 2 bad English
+sentences and 3 good ones. We also used two different oberservation sets each containing sentences of varying length. 
+</p>
+
+<hr>
+<h2> Results</h2>
+<p>
+<table>
+<tr><td colspan=3><center><h3>Results</h3></center></td></tr>
+<p> These experiments were ran with debugger code to show the input sentences tested and output results. 
+<tr>
+<td> Trial </td>
+</tr>
+<tr>
+  <td> Observation Sample 1</td> 
+  <td> <img src="obs1.png"></td>
+</tr> 
+<tr>
+  <td> Observation Sample 2</td> 
+  <td> <img src="obs2.png"></td> 
+</tr>
+<tr>
+  <td> Pattern Recognition</td> 
+  <td> <img src="recognize.png"></td> 
+</tr> 
+<tr>
+  <td> State Path Determination </td> 
+  <td> <img src="statepath.png"> </td> 
+</tr> 
+<tr>
+  <td> Optimization </td> 
+  <td> <img src="optimize.png"> </td> 
+
+</tr>
+</table>
+</p>
+<hr>
+<h2> Discussion </h2>
+
+<p> 
+Discuss your method and results:
+<ul>
+<li> Recognize: In the recognize function, the probability of the observation sequence is lower than expected because with 8 words in the library,
+there are many possiblity sentences with different lengths and sequences. 
+ This probability means that the exact sequence in that exact order is low. 
+Our current HMM does not give a reasonable answer because sentences that are invalid still have a low probability. Invalid sentences should have a probability of 0. For the two example sentences, "robots do kids play chess" and "chess eat play kids" the probabilites are 0.00512 and 0.00 respectively. With the former example,
+it is not a valid sentence but we still get a probability greater than 0.
+
+
+<li> State-path: The optimal path represents the structure of a sentence. The parts of sentences assigned to a word can be different depending on the position of that word and the words around it. We can estimate the syntax of the sentence with the path. We can guess whether it is a statement
+or a question but it is not always true. Some words can be used as either an object or a subject, which can be misleading to the HMM. Consider the examples "Hit Matt." and "Is it?". They can both have the structure PREDICATE OBJECT. </li>
+ 
+<li> Optimization: Gamma and xi both divide by the observation probability.
+ If the observation probability is zero, then you cannot divide by it. </li>
+ 
+<li> Model Enhancement: ADVERB should be added to the states. "well" and "fast" should be added to the possible observations.
+ B and pi need an extra row to represent the new state. 
+A needs a new row and column to represent the new state. B needs 2 extra columns to represent the new words. </li>
+
+<tr>
+  <td> Updated HMM</td> 
+  <td> <img src="updatedhmm.png"></td> 
+</tr> 
+ 
+<li> There are limitations with our optimization because if the observation probability is zero, then we cannot use the optimize function. 
+	 Another limitation is with the state path function because if a word can be an object or a subject, the HMM cannot fully determine which type of English syntactic structure it is currently being used as. 
+	 For forward propagation, there can be an underflow issue because the probabilities are monotonically decreaseing in magnitutude. We did not face this problem since we only had a small number of observations.  This problem could occur with a large sample of oberservations.
+	 Our method was generally successful except for the few instances where invalid sentences returned a probability greater than zero. 
+	 
+	 
+</li>
+<li> Normalizing the state probability could overcome the underflow issue after each iteration during forward and backward algorithm. </li> 
+</ul>
+</p>
+<hr>
+<h2> Conclusions </h2>
+<p>
+Our conclusion is that simple grammar structures can be learned by an HMM and if we had a larger library of words we would be able to recognize more complex sentences. 
+
+</p>
+
+
+<hr>
+<h2> Credits and Bibliography </h2>
+<p>
+
+http://www.cs.bu.edu/fac/betke/cs440/restricted/papers/rabiner.pdf 4/4/16
+</p>
+
+<p>
+I did the recongnize and the forward algorithm. And I helped Amanda to write the report
+</p>
+<hr>
+</div>
+</body>
+
+
+
+</html>
